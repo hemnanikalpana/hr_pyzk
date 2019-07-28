@@ -1,9 +1,9 @@
 
 from odoo import models, fields, api, exceptions, _
-from addons.hr_pyzk.controllers import controller as c
+from odoo.addons.hr_pyzk.controllers import controller as c
 from zk import ZK, const
 
-class DeviceUsers(models.Model):
+class DeviceUsers1(models.Model):
     _name = 'device.users'
     _order = "device_user_id"
 

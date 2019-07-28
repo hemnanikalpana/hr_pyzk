@@ -3,20 +3,24 @@ from odoo import models, fields, api, exceptions, _
 
 class DeviceUsers():
 
-
+    @staticmethod
     def get_users(devices):
         all_users = []
-        all_users.clear()
+        # all_users.clear()
         # device_object = self.env['devices']
         # devices = device_object.search([('state', '=', 0)])
+        print ':::devices', devices
         for device in devices:
+            print '::device.ip_address::',device.ip_address, device.port, device.device_password
             with ConnectToDevice(device.ip_address, device.port, device.device_password) as conn:
+                print ':::conn', conn
                 users = conn.get_users()
+                print ':::users', users
                 all_users.extend(users)
                 added = []
-                added.clear()
+                # added.clear()
                 unique_data = []
-                unique_data.clear()
+                # unique_data.clear()
                 for user in all_users:
                     if int(user.user_id) not in added:
                         added.append(int(user.user_id))
@@ -24,6 +28,7 @@ class DeviceUsers():
                         unique_data.append(user)
         return unique_data
 
+    @staticmethod
     def get_attendance(device):
         """
                 Function uses to get attendances
@@ -35,12 +40,13 @@ class DeviceUsers():
 
         return device_attendance
 
+    @staticmethod
     def outputresult(user_punches):
 
         user_clock = []
-        user_clock.clear()
+        # user_clock.clear()
         user_attendance = []
-        user_attendance.clear()
+        # user_attendance.clear()
         initial_number = 1
 
         for clock in user_punches:
@@ -68,8 +74,10 @@ class ConnectToDevice(object):
 
 
         try:
-            zk = ZK(ip_address, port,timeout = 10, password=device_password)
+            zk = ZK(ip_address, port)
+            print '::::zk', zk
             conn = zk.connect()
+            print ':::successful', conn
 
         except Exception as e:
             raise exceptions.Warning(e)

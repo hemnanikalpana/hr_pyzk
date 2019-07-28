@@ -7,7 +7,7 @@
 from odoo import models, fields, api, exceptions, _
 import datetime
 import pytz
-from addons.hr_pyzk.controllers import controller as c
+from odoo.addons.hr_pyzk.controllers import controller as c
 
 
 class UserWizard(models.TransientModel):
@@ -32,9 +32,9 @@ class UserWizard(models.TransientModel):
 
     def import_attendance(self): # Import Attendance Wizard
         all_attendances = []
-        all_attendances.clear()
+        # all_attendances.clear()
         all_clocks = []
-        all_clocks.clear()
+        # all_clocks.clear()
         device_user_object = self.env['device.users']
         device_users = device_user_object.search([])
         attendance_object = self.env['device.attendances']
@@ -52,12 +52,12 @@ class UserWizard(models.TransientModel):
                 latest_datetime = datetime.datetime.strptime(latest_datetime, '%Y-%m-%d %H:%M:%S')
                 latest_datetime = latest_datetime + datetime.timedelta(hours=device.difference)
 
-                all_attendances = [[y.id, x[1].astimezone(pytz.utc), x[2], x[3]]
+                all_attendances = [[y.id, x[1], x[2], x[3]]
                                    for x in attendances for y in device_users if
                                    int(x[0]) == y.device_user_id and x[2] <= 1 and x[1] > latest_datetime]
             else:
 
-                all_attendances = [[y.id, x[1].astimezone(pytz.utc), x[2], x[3]]
+                all_attendances = [[y.id, x[1], x[2], x[3]]
                                    for x in attendances for y in device_users if
                                    int(x[0]) == y.device_user_id and x[2] <= 1]
             all_clocks.extend((all_attendances))
@@ -78,19 +78,19 @@ class UserWizard(models.TransientModel):
         odoo_users = device_user_object.search([])
 
         user_punches2 = []
-        user_punches2.clear()
+        # user_punches2.clear()
         all_attendance = []
-        all_attendance.clear()
+        # all_attendance.clear()
         user_clocks = []
-        user_clocks.clear()
+        # user_clocks.clear()
         attendance = []
-        attendance.clear()
+        # attendance.clear()
         #clock = []
         #clock.clear()
 
         for user in odoo_users:
             device_attendances = []
-            device_attendances.clear()
+            # device_attendances.clear()
             device_attendances = device_attendances_object.search(
                 [('device_user_id', '=', user.id), ('attendance_state', '=', 0)])
 
@@ -113,7 +113,7 @@ class UserWizard(models.TransientModel):
     def combine_attendance(self):
         combined_attendances_object= self.env['combined.attendances']
         valid_attendances = []
-        valid_attendances.clear()
+        # valid_attendances.clear()
         valid_attendances = self.employee_attendance()
         for attendance in valid_attendances:
             combined_attendances_object.create({
